@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import {Input} from "../components/Form";
 
@@ -30,6 +29,16 @@ function Search(props) {
         .catch(err => console.log(err));
     }
   };
+  function saveBook(title,authors,description, image, link) {
+    API.saveBook({title,authors,description, image, link})
+      .then(res => {console.log("saveBook")})
+      .catch(err => console.log(err));
+  }
+  // title: { type: String, required: true },
+  // authors: [{ type: String, required: true }],
+  // description: String,
+  // image: String,
+  // link: String,
   return (
       <Container fluid>
         <Row>
@@ -46,7 +55,22 @@ function Search(props) {
         <Row>
           <Col size="md-10 md-offset-1">
             {books.map(book =>(
-              <p>{book.volumeInfo.title}</p>
+              <div className="row">
+              <div className="col s12">
+                  <div className="card light-blue darken-1">
+                      <div className="card-content white-text">
+                          <span className="card-title">{book.volumeInfo.title}</span>
+                          <p>{book.volumeInfo.authors.join()}</p>
+                          <p>{book.volumeInfo.description}</p>
+                          {/* <p>{book.volumeInfo.authors}</p> */}
+                      </div>
+                      <div className="card-action">
+                      <a className="btn-floating btn-large waves-effect waves-light red" href={book.volumeInfo.infoLink}><i className="material-icons">link</i></a>
+                          <a className="btn-floating btn-large waves-effect waves-light red" onClick={()=>saveBook(book.volumeInfo.title, book.volumeInfo.authors, book.volumeInfo.description, book.volumeInfo.imageLinks.thumbnail, book.volumeInfo.infoLink)}><i className="material-icons">save</i></a>
+                      </div>
+                  </div>
+              </div>
+          </div>
             ))}
           </Col>
         </Row>
